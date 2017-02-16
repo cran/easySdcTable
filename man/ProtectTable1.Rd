@@ -9,7 +9,7 @@ ProtectTable1(data, dimVarInd = 1:NCOL(data), freqVarInd = NULL,
   protectZeros = TRUE, maxN = 3, method = "SIMPLEHEURISTIC",
   findLinked = TRUE, total = "Total", addName = FALSE, sep = ".",
   removeZeros = FALSE, groupVarInd = NULL, ind1 = NULL, ind2 = NULL,
-  dimDataReturn = FALSE, ...)
+  dimDataReturn = FALSE, IncProgress = IncDefault, ...)
 }
 \arguments{
 \item{data}{Matrix or data frame}
@@ -41,6 +41,8 @@ ProtectTable1(data, dimVarInd = 1:NCOL(data), freqVarInd = NULL,
 \item{ind2}{Coding of table 2 as indices referring to elements of groupVarInd}
 
 \item{dimDataReturn}{When TRUE a data frame containing the dimVarInd variables is retuned}
+
+\item{IncProgress}{A function to report progress (incProgress in Shiny).}
 
 \item{...}{Further parameters sent to protectTable or protectLinkedTables.}
 }

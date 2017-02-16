@@ -19,6 +19,7 @@
 #' @param ind1  Coding of table 1 as indices referring to elements of groupVarInd
 #' @param ind2  Coding of table 2 as indices referring to elements of groupVarInd
 #' @param dimDataReturn When TRUE a data frame containing the dimVarInd variables is retuned
+#' @param IncProgress A function to report progress (incProgress in Shiny).
 #' @param ... Further parameters sent to protectTable or protectLinkedTables.
 #'
 #' @details One or two tables are identified automatically and subjected to cell suppression methods in package sdcTable.
@@ -64,7 +65,8 @@
 ProtectTable1 <- function(data, dimVarInd = 1:NCOL(data), freqVarInd = NULL, protectZeros = TRUE, 
                           maxN = 3, method = "SIMPLEHEURISTIC", findLinked = TRUE, total = "Total", addName = FALSE, 
                           sep = ".", removeZeros = FALSE, groupVarInd = NULL, ind1 = NULL, ind2 = NULL, 
-                          dimDataReturn = FALSE, ...) {
+                          dimDataReturn = FALSE, 
+                          IncProgress = IncDefault, ...) {
   allowZeros <- protectZeros
   methodLinked <- method
   if (removeZeros & !is.null(freqVarInd)) 
@@ -97,6 +99,8 @@ ProtectTable1 <- function(data, dimVarInd = 1:NCOL(data), freqVarInd = NULL, pro
   
   dimList1 <- dimLists[ind1]
   
+  IncProgress()
+  
   problem1 <- makeProblem(data = data, dimList = dimList1, dimVarInd = match(names(dimList1), 
                                                                              colnames(data)), freqVarInd = freqVarInd)
   primary1 <- primarySuppression(problem1, type = "freq", maxN = maxN, allowZeros = allowZeros)
@@ -107,6 +111,7 @@ ProtectTable1 <- function(data, dimVarInd = 1:NCOL(data), freqVarInd = NULL, pro
                                                                                colnames(data)), freqVarInd = freqVarInd)
     primary2 <- primarySuppression(problem2, type = "freq", maxN = maxN, allowZeros = allowZeros)
     commonCells <- FindCommonCells(dimList1, dimList2)
+    IncProgress()
     secondary <- protectLinkedTables(objectA = primary1, objectB = primary2, 
                                      commonCells = commonCells, method = methodLinked, ...)
     
@@ -116,6 +121,7 @@ ProtectTable1 <- function(data, dimVarInd = 1:NCOL(data), freqVarInd = NULL, pro
     problem2 <- NULL
     primary2 <- NULL
     commonCells <- NULL
+    IncProgress()
     secondary <- list(protectTable(object = primary1, method = method, ...), 
                       NULL)
   }

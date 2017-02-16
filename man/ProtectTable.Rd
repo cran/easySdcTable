@@ -15,7 +15,8 @@ ProtectTable(data, dimVar = 1:NCOL(data), freqVar = NULL,
   orderAsInput = TRUE, sortByReversedColumns = FALSE, doUnstack = TRUE,
   removeTotal = TRUE, singleOutput = NULL, suppression = NA,
   outFreq = "freq", outSdcStatus = "sdcStatus",
-  outSuppressed = "suppressed", ...)
+  outSuppressed = "suppressed", infoAsFrame = FALSE,
+  IncProgress = IncDefault, ...)
 }
 \arguments{
 \item{data}{data frame}
@@ -96,6 +97,10 @@ created by unstacking (in cases with sever input freqvar variables).}
 
 \item{outSuppressed}{String used to name output variable(s)}
 
+\item{infoAsFrame}{When TRUE output element info is a data frame (useful in Shiny).}
+
+\item{IncProgress}{A function to report progress (incProgress in Shiny).}
+
 \item{...}{Further parameters sent to \code{\link{protectTable}} (possibly via \code{\link{protectLinkedTables}})
 such as verbose (print output while calculating) and timeLimit.}
 }
@@ -111,7 +116,7 @@ When singleOutput=TRUE output is a list of two elements.
         according to outFreq, outSdcStatus and outSuppressed.
 }
 \description{
-protectTable or protectLinkedTables is run with a data set as the only required input.
+protectTable() or protectLinkedTables() in package 'sdcTable' is run with a data set as the only required input.
  One (stacked) or several (unstacked) input variables can hold cell counts.
  Output is on a form similar to input.
 }

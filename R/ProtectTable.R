@@ -1,6 +1,6 @@
 #'  Easy interface to sdcTable: Table suppression according to a frequency rule. 
 #'
-#'  protectTable or protectLinkedTables is run with a data set as the only required input.
+#'  protectTable() or protectLinkedTables() in package 'sdcTable' is run with a data set as the only required input.
 #'  One (stacked) or several (unstacked) input variables can hold cell counts.
 #'  Output is on a form similar to input.
 #'
@@ -52,6 +52,8 @@
 #' @param outFreq String used to name output variable(s)
 #' @param outSdcStatus String used to name output variable(s)
 #' @param outSuppressed String used to name output variable(s)
+#' @param infoAsFrame When TRUE output element info is a data frame (useful in Shiny).
+#' @param IncProgress A function to report progress (incProgress in Shiny).
 #' @param ...  Further parameters sent to \code{\link{protectTable}} (possibly via \code{\link{protectLinkedTables}})
 #'        such as verbose (print output while calculating) and timeLimit.
 #' 
@@ -79,7 +81,7 @@
 #' @export
 #' @importFrom sdcTable summary getInfo
 #' @importFrom SSBtools AutoSplit Stack SortRows Unstack
-#' @importFrom utils capture.output
+#' @importFrom utils capture.output flush.console
 #' 
 #' @seealso protectTable makes a call to the function \code{\link{ProtectTable1}}.
 #'
@@ -154,7 +156,10 @@ ProtectTable  <-  function(data,
                          outFreq="freq",
                          outSdcStatus="sdcStatus",
                          outSuppressed="suppressed",
+                         infoAsFrame = FALSE,
+                         IncProgress = IncDefault,
                          ...) {
+  IncProgress()
   if (is.character(dimVar)) 
     dimVarInd <- match(dimVar, names(data)) else dimVarInd <- dimVar
     if (is.character(freqVar)) 
@@ -188,23 +193,42 @@ ProtectTable  <-  function(data,
         
       }
       
-      
+      IncProgress()
       pt <- ProtectTable1(data = data, dimVarInd = dimVarInd, freqVarInd = freqVarInd, 
                           protectZeros = protectZeros, maxN = maxN, method = method, findLinked = findLinked, 
                           total = total, addName = addName, sep = sep, removeZeros = removeZeros, groupVarInd = groupVarInd, 
-                          ind1 = ind1, ind2 = ind2, dimDataReturn = TRUE, ...)
+                          ind1 = ind1, ind2 = ind2, dimDataReturn = TRUE, IncProgress = IncProgress, ...)
       
+      if(infoAsFrame){
+          i00 <- as.data.frame(rbind(
+                 ## c("method",method),
+                 c("protectZeros",protectZeros),
+                 c("maxN",maxN)
+          ),stringsAsFactors=FALSE)
+          names(i00) <- c("method",method)   #c("Parameter","Choice")
+          if (stacked) 
+          i0 <- data.frame(InputName=rownames(rowData),as.data.frame(as.matrix(rowData),stringsAsFactors=FALSE),stringsAsFactors=FALSE) else i0 <- NULL
+          i1 <- as.data.frame(as.matrix(pt$common$info),stringsAsFactors=FALSE)
+          i2 <- as.data.frame(capture.output(sdcTable::summary(pt$table1[[1]])),stringsAsFactors=FALSE)
+          names(i2) = "Summary1sdcTable"            
+          if (!is.null(pt$table2[[1]])) {
+            i3 <- as.data.frame(capture.output(sdcTable::summary(pt$table2[[1]])),stringsAsFactors=FALSE)
+            names(i3) = "Summary2sdcTable"
+          } else i3 <- NULL
+        info <- RbindAllwithNames(i00,i0,i1,i2,i3,toRight=TRUE,extra="= = =")
+        colnames(info)[1] <- "Info"
+      } else {
+        if (stacked) 
+          i0 <- capture.output(print(rowData)) else i0 <- NULL
       
-      if (stacked) 
-        i0 <- capture.output(print(rowData)) else i0 <- NULL
+        i1 <- capture.output(print(pt$common$info))
+        i2 <- capture.output(sdcTable::summary(pt$table1[[1]])) ## Wrong in html Vignette without "sdcTable::"
+        if (!is.null(pt$table2[[1]])) 
+          i3 <- capture.output(sdcTable::summary(pt$table2[[1]])) else i3 <- NULL
       
-      i1 <- capture.output(print(pt$common$info))
-      i2 <- capture.output(summary(pt$table1[[1]]))
-      if (!is.null(pt$table2[[1]])) 
-        i3 <- capture.output(summary(pt$table2[[1]])) else i3 <- NULL
-      
-      info <- c(i0, "==========", i1, "==========", i2, "==========", i3)
-      info <- as.matrix(info, ncol = 1)  # One element pr row when printed
+        info <- c(i0, "==========", i1, "==========", i2, "==========", i3)
+        info <- as.matrix(info, ncol = 1)  # One element pr row when printed
+      }
       
       gVC <- GroupVarCombined(pt$common$groupVarInd, totalFirst)
       
@@ -271,7 +295,8 @@ ProtectTable  <-  function(data,
       
       finalData$supp6547524 <- suppressed
       
-      
+      IncProgress()
+      cat("\n")
       if (stacked & doUnstack) {
         if (is.null(singleOutput)) 
           singleOutput <- FALSE
@@ -509,7 +534,6 @@ if (FALSE) {
     save(z3w, file = "C:/R/easysdctable/data/z3w.RData")
     save(z3wb, file = "C:/R/easysdctable/data/z3wb.RData")
   }
-  
 }
 
 
