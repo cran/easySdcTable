@@ -22,4 +22,3 @@ Function that returns a dataset
  z  <- EasyData("sosialFiktiv")
 
 }
-

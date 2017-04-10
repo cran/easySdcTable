@@ -18,4 +18,3 @@ but this results in wrong
 \examples{
  IncDefault() 
 }
-

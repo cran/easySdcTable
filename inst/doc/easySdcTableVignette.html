@@ -4,7 +4,7 @@
 
 <head>
 
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
@@ -77,6 +77,19 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Below is given an introductory demonstration of the function ProtectTable() which enables an easy interface to the statistical disclosure control package ‘sdcTable’ (<a href="https://CRAN.R-project.org/package=sdcTable" class="uri">https://CRAN.R-project.org/package=sdcTable</a>). To see the input and output to functions in sdcTable consult the function ProtectTable1() which is an underlying function of ProtectTable(). Note that ‘easySdcTable’ is not as general as ‘sdcTable’.</p>
 <p>This package was originally developed as a part of the modernization of the production of the key figures on municipal activities in Norway (<a href="https://www.ssb.no/en/offentlig-sektor/kostra" class="uri">https://www.ssb.no/en/offentlig-sektor/kostra</a>). The fictitious example data is generated to be similar to realistic data from Norwegian municipalities and the variable names are (unfortunately) in Norwegian.</p>
 <p>The demonstration below is based on the data from example 2 in the package and first we will use the unstacked data.</p>
+<p>Before demonstrating ProtectTable() a few word about new possibilities in this version of ‘easySdcTable’ is given.</p>
+</div>
+<div id="graphical-user-interface-and-tau-argus" class="section level2">
+<h2>Graphical user interface and <span class="math inline">\(\tau\)</span>-ARGUS</h2>
+<p>A graphical user interface based on ‘shiny’ can be started by:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">PTgui</span>()</code></pre></div>
+<p>To start the gui with example data and catch output:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out &lt;-<span class="st"> </span><span class="kw">PTgui</span>(<span class="dt">data =</span> <span class="kw">EasyData</span>(<span class="st">&quot;z1w&quot;</span>))</code></pre></div>
+<p>To start the gui with possibility to run tau-argus:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">exeArgus &lt;-<span class="st"> &quot;C:/Tau/TauArgus4.1.4/TauArgus.exe&quot;</span>  <span class="co"># Tau-argus executable </span>
+pathArgus &lt;-<span class="st"> &quot;C:/Users/nnn/Documents&quot;</span>  <span class="co"># Folder for (temporary) tau-argus files</span>
+<span class="kw">PTgui</span>(<span class="dt">exeArgus =</span> exeArgus, <span class="dt">pathArgus =</span> pathArgus)</code></pre></div>
+<p>The interface to tau-argus make use of new functionality in ‘sdcTable’. See the documentation of ProtectTable() for more information.</p>
 </div>
 <div id="unstacked-data" class="section level2">
 <h2>Unstacked data</h2>

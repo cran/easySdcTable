@@ -31,7 +31,9 @@ ProtectTable(data, dimVar = 1:NCOL(data), freqVar = NULL,
 
 \item{method}{Parameter "method" in \code{\link{protectTable}} or \code{\link{protectLinkedTables}}.
 Default is "SIMPLEHEURISTIC". Other allowed values are
-"OPT", "HITAS" and "HYPERCUBE". The latter is not possible in cases with two linked tables.}
+"OPT", "HITAS" and "HYPERCUBE". The latter is not possible in cases with two linked tables.
+Alternatively this parameter can be a named list specifying parameters for running tau-argus (see details).
+Experimental wrapper methods according to \code{\link{PTwrap}} is also possible (see details).}
 
 \item{findLinked}{When TRUE, the function may find two linked tables and run protectLinkedTables.}
 
@@ -102,7 +104,8 @@ created by unstacking (in cases with sever input freqvar variables).}
 \item{IncProgress}{A function to report progress (incProgress in Shiny).}
 
 \item{...}{Further parameters sent to \code{\link{protectTable}} (possibly via \code{\link{protectLinkedTables}})
-such as verbose (print output while calculating) and timeLimit.}
+such as verbose (print output while calculating) and timeLimit. 
+Parameters to \code{\link{createArgusInput}} and \code{\link{PTwrap}} is also possible (see details).}
 }
 \value{
 When singleOutput=TRUE output is a list of two elements.
@@ -130,7 +133,27 @@ One or two tables are identified automatically and subjected to cell suppression
          This is taken directly from the output from sdcTable. In cases with two linked tables "u" or "x" 
          for common cells are based on output from the first table.
          
-         NOTE: The use of numVarInd, weightInd and sampWeightInd in sdcTable is not implemented.
+         \strong{To run tau-argus} specify "method" as a named list containing the
+         parameter "exe" for \code{\link{runArgusBatchFile}} and other parameters for 
+         \code{\link{createArgusInput}}.  
+         
+         One may specify:  
+         \code{method = list(exe="C:/Tau/TauArgus.exe", typ="tabular", path= getwd(),} 
+         \code{solver= "FREE", method= "OPT")}
+          
+         However these values of "exe", "path" and "solver" and "method" are set by default so in this case 
+         using "\code{method = list(typ="tabular", method= "OPT")}" is equivalent.
+         
+         If \code{typ="microdata"} is specified. Necessary transformation to microdata will be made. 
+         
+         \strong{Wrapper methods (experimental):}
+         In the function \code{\link{PTwrap}} several additional methods are defined. 
+         If input to ProtectTable() is one of these methods ProtectTable() will 
+         be run via PTwrap(). So making explicit call to PTwrap() is not needed.
+              
+         
+         NOTE: The use of numVarInd, weightInd and sampWeightInd in sdcTable is not implemented. This also limit possible 
+         input to  tau-argus.
 }
 \examples{
  # ==== Example 1 , 8 regions ====
@@ -169,9 +192,25 @@ One or two tables are identified automatically and subjected to cell suppression
                split="_")  # Three variables when splitting
  ProtectTable(z3wb,1:3,4:15,varName=c("hovedint","mnd","mnd2"), 
                split="_",namesAsInput=FALSE,orderAsInput=FALSE) # Alternative ouput format
+               
+ # ====  Examples Tau-Argus ====              
+ exe  <- "C:/Users/oyl/R/TauArgus/TauWindows4.1.4_updated/TauArgus4.1.4/TauArgus.exe"
+ path <- "C:/Users/oyl/Documents/work/tull"
+ z1 = EasyData("z1") 
+ ProtectTable(z1,1:2,3,method=list(exe=exe, path=path, typ="tabular", method="OPT")) 
+ ProtectTable(z1,1:2,3,method=list(exe=exe, path=path, typ="tabular", method="MOD")) 
+ ProtectTable(z1,1:2,3,method=list(exe=exe, path=path, typ="tabular", method="GH"))
+ z1$ant[17] = 0 
+  ProtectTable(z1,1:2,3,maxN=-1,
+   method=list(path=path, exe=exe, method="OPT",primSuppRules= list(
+   list(type="freq", n=4, rg=20),
+   list(type="zero", rg=1)
+   )))
+ z3w <- EasyData("z3")
+ ProtectTable(z3,c(1:2,4,5),7,maxN=-1,
+   method=list(path=path, exe=exe, method="OPT",primSuppRules=list(list(type="freq", n=4, rg=20))))
                }
 }
 \seealso{
-protectTable makes a call to the function \code{\link{ProtectTable1}}.
+ProtectTable makes a call to the function \code{\link{ProtectTable1}}.
 }
-

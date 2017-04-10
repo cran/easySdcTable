@@ -22,7 +22,8 @@ ProtectTable1(data, dimVarInd = 1:NCOL(data), freqVarInd = NULL,
 
 \item{maxN}{All cells having counts <= maxN are set as primary suppressed.}
 
-\item{method}{Parameter "method" in protectTable or protectLinkedTables.}
+\item{method}{Parameter "method" in protectTable or protectLinkedTables.
+Alternatively a list defining parameters for running tau-argus (see \code{\link{ProtectTable}}).}
 
 \item{findLinked}{When TRUE, the function may find two linked tables and run protectLinkedTables.}
 
@@ -44,15 +45,16 @@ ProtectTable1(data, dimVarInd = 1:NCOL(data), freqVarInd = NULL,
 
 \item{IncProgress}{A function to report progress (incProgress in Shiny).}
 
-\item{...}{Further parameters sent to protectTable or protectLinkedTables.}
+\item{...}{Further parameters sent to protectTable, protectLinkedTables or createArgusInput.}
 }
 \value{
 Output is a list of three elements.
 
         \strong{table1} consists of the following elements:
-        \item{secondary}{Output from protectTable or first element of output from protectLinkedTables.}
-        \item{primary}{Output from primarySuppression.}
-        \item{problem}{Output from makeProblem.}
+        \item{secondary}{Output from \code{\link{protectTable}} or first element of output from \code{\link{protectLinkedTables}} 
+        or output from \code{\link{runArgusBatchFile}}.}
+        \item{primary}{Output from \code{\link{primarySuppression}}.}
+        \item{problem}{Output from \code{\link{makeProblem}}.}
         \item{dimList}{Generated input to makeProblem.}
         \item{ind}{Indices referring to elements of groupVarInd in the output element common.}
 
@@ -89,4 +91,3 @@ as.data.frame(getInfo(b[[2]][[1]],type="finalData")) # Second table
         \code{\link{HierarchicalGroups}}, \code{\link{FactorLevCorr}},
         \code{\link{FindDimLists}}, \code{\link{FindCommonCells}}
 }
-

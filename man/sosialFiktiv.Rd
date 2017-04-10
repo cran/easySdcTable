@@ -18,4 +18,3 @@ The other datasets (\code{z1}, \code{z1w}, \code{z2}, \code{z2w}, \code{z3}, \co
 Datasets marked with '\code{w}' are unstacked and several variables are holding counts.
 }
 \keyword{datasets}
-

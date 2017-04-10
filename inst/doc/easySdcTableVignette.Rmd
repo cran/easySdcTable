@@ -23,6 +23,26 @@ library(easySdcTable)
 
 The demonstration below is based on the data from example 2 in the package and first we will use the unstacked data.
 
+Before demonstrating ProtectTable() a few word about new possibilities in this version of 'easySdcTable' is given.
+
+## Graphical user interface and $\tau$-ARGUS
+
+A graphical user interface based on 'shiny' can be started by: 
+```{r eval=FALSE, tidy = TRUE}
+PTgui()
+```
+To start the gui with example data and catch output:
+```{r eval=FALSE, tidy = TRUE}
+out <- PTgui(data=EasyData("z1w"))
+```
+To start the gui with possibility to run tau-argus:
+```{r eval=FALSE, tidy = TRUE}
+exeArgus <- "C:/Tau/TauArgus4.1.4/TauArgus.exe" # Tau-argus executable 
+pathArgus <- "C:/Users/nnn/Documents" # Folder for (temporary) tau-argus files
+PTgui(exeArgus=exeArgus, pathArgus=pathArgus) 
+```
+The interface to tau-argus make use of new functionality in ‘sdcTable’. See the documentation of ProtectTable() for more information.
+
 
 ## Unstacked data
 

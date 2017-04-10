@@ -10,6 +10,7 @@
 #' @param protectZeros When TRUE empty cells (count=0) is considered sensitive (i.e. same as allowZeros in primarySuppression).
 #' @param maxN All cells having counts <= maxN are set as primary suppressed.
 #' @param method Parameter "method" in protectTable or protectLinkedTables.
+#'               Alternatively a list defining parameters for running tau-argus (see \code{\link{ProtectTable}}).
 #' @param findLinked When TRUE, the function may find two linked tables and run protectLinkedTables.
 #' @param total String used to name totals.
 #' @param addName When TRUE the variable name is added to the level names, except for variables with most levels.
@@ -20,7 +21,7 @@
 #' @param ind2  Coding of table 2 as indices referring to elements of groupVarInd
 #' @param dimDataReturn When TRUE a data frame containing the dimVarInd variables is retuned
 #' @param IncProgress A function to report progress (incProgress in Shiny).
-#' @param ... Further parameters sent to protectTable or protectLinkedTables.
+#' @param ... Further parameters sent to protectTable, protectLinkedTables or createArgusInput.
 #'
 #' @details One or two tables are identified automatically and subjected to cell suppression methods in package sdcTable.
 #'          The tables can alternatively be specified manually by groupVarInd, ind1 and ind2 (see \code{\link{FindTableGroup}}).
@@ -28,9 +29,10 @@
 #' @return Output is a list of three elements.
 #'
 #'         \strong{table1} consists of the following elements:
-#'         \item{secondary}{Output from protectTable or first element of output from protectLinkedTables.}
-#'         \item{primary}{Output from primarySuppression.}
-#'         \item{problem}{Output from makeProblem.}
+#'         \item{secondary}{Output from \code{\link{protectTable}} or first element of output from \code{\link{protectLinkedTables}} 
+#'         or output from \code{\link{runArgusBatchFile}}.}
+#'         \item{primary}{Output from \code{\link{primarySuppression}}.}
+#'         \item{problem}{Output from \code{\link{makeProblem}}.}
 #'         \item{dimList}{Generated input to makeProblem.}
 #'         \item{ind}{Indices referring to elements of groupVarInd in the output element common.}
 #'
@@ -44,7 +46,7 @@
 #'         \item{dimData}{Data frame containing the dimVarInd variables when dimDataReturn=TRUE. Otherwise NULL.}
 #'
 #' @export
-#' @importFrom sdcTable makeProblem primarySuppression protectTable protectLinkedTables
+#' @importFrom sdcTable makeProblem primarySuppression protectTable protectLinkedTables createArgusInput runArgusBatchFile
 #' @importFrom SSBtools FindTableGroup FindDimLists FindCommonCells FactorLevCorr
 #'
 #' @seealso \code{\link{ProtectTable}}, 
@@ -66,7 +68,25 @@ ProtectTable1 <- function(data, dimVarInd = 1:NCOL(data), freqVarInd = NULL, pro
                           maxN = 3, method = "SIMPLEHEURISTIC", findLinked = TRUE, total = "Total", addName = FALSE, 
                           sep = ".", removeZeros = FALSE, groupVarInd = NULL, ind1 = NULL, ind2 = NULL, 
                           dimDataReturn = FALSE, 
-                          IncProgress = IncDefault, ...) {
+                          IncProgress = IncDefault,
+                          ...) {
+  tauArgus <- is.list(method)
+  makeMicro = FALSE
+  
+  if(tauArgus){
+    exeTauArgus <- method$exe
+    method$exe <- NULL
+    if(is.null(exeTauArgus)) exeTauArgus  <- formals(runArgusBatchFile)$exe # "C:\\Tau\\TauArgus.exe"
+    if(is.null(method$typ))    method$typ <- formals(createArgusInput)$typ  #  "microdata"
+    if(!(method$typ %in% c("microdata","tabular")))
+      stop('typ must be "microdata" or "tabular"')
+    if(method$typ == "microdata") makeMicro = TRUE
+  }  
+  
+  if(maxN>=0) primarySupp <- primarySuppression 
+  else primarySupp <- function(...) NULL # Possible to ignore primarySuppression
+  
+  
   allowZeros <- protectZeros
   methodLinked <- method
   if (removeZeros & !is.null(freqVarInd)) 
@@ -99,17 +119,23 @@ ProtectTable1 <- function(data, dimVarInd = 1:NCOL(data), freqVarInd = NULL, pro
   
   dimList1 <- dimLists[ind1]
   
+  if(makeMicro){ 
+    data <- MakeMicro(data,freqVarInd)
+    freqVarInd <- NULL
+  }
+  
   IncProgress()
   
   problem1 <- makeProblem(data = data, dimList = dimList1, dimVarInd = match(names(dimList1), 
-                                                                             colnames(data)), freqVarInd = freqVarInd)
-  primary1 <- primarySuppression(problem1, type = "freq", maxN = maxN, allowZeros = allowZeros)
+                                                                               colnames(data)), freqVarInd = freqVarInd)
+  primary1 <- primarySupp(problem1, type = "freq", maxN = maxN, allowZeros = allowZeros)
   
   if (linked) {
+    if(tauArgus) stop("tauArgus with linked tables is not implemented")
     dimList2 <- dimLists[ind2]
     problem2 <- makeProblem(data = data, dimList = dimList2, dimVarInd = match(names(dimList2), 
                                                                                colnames(data)), freqVarInd = freqVarInd)
-    primary2 <- primarySuppression(problem2, type = "freq", maxN = maxN, allowZeros = allowZeros)
+    primary2 <- primarySupp(problem2, type = "freq", maxN = maxN, allowZeros = allowZeros)
     commonCells <- FindCommonCells(dimList1, dimList2)
     IncProgress()
     secondary <- protectLinkedTables(objectA = primary1, objectB = primary2, 
@@ -122,8 +148,21 @@ ProtectTable1 <- function(data, dimVarInd = 1:NCOL(data), freqVarInd = NULL, pro
     primary2 <- NULL
     commonCells <- NULL
     IncProgress()
-    secondary <- list(protectTable(object = primary1, method = method, ...), 
-                      NULL)
+    if(!tauArgus){
+      secondary <- list(protectTable(object = primary1, method = method, ...), NULL)
+    } else {  
+      ## tauArgus start here
+      if(method$typ == "microdata"){
+        batchF <- eval(as.call(c(as.name("createArgusInput"),obj=as.name("problem1"),method, ...)))
+        if(get0("waitForAKeyPress",ifnotfound = FALSE)) invisible(readline(prompt="Press [enter] to continue"))
+        secondary <- list(runArgusBatchFile(obj=problem1, batchF = batchF, exe = exeTauArgus), NULL)
+      }
+      else{  # Same as above with primary1 instead of problem1
+        batchF <- eval(as.call(c(as.name("createArgusInput"),obj=as.name("primary1"),method, ...)))
+        if(get0("waitForAKeyPress",ifnotfound = FALSE)) invisible(readline(prompt="Press [enter] to continue"))
+        secondary <- list(runArgusBatchFile(obj=primary1, batchF = batchF, exe = exeTauArgus), NULL)
+      }
+    }
   }
   
   x <- groupVarInd
@@ -139,4 +178,13 @@ ProtectTable1 <- function(data, dimVarInd = 1:NCOL(data), freqVarInd = NULL, pro
                                                                            primary = primary2, problem = problem2, dimList = dimList2, ind = ind2), 
               common = list(commonCells = commonCells, groupVarInd = groupVarInd, info = x, 
                             nLevels = nLevels, dimData = dimData)))
+}
+
+# Make micro data from data with freq. 
+MakeMicro <- function(x,freqInd){
+  rows <- rep(seq_len(NROW(x)),x[,freqInd])
+  x <- x[rows, ,drop=FALSE]
+  x[,freqInd] <- 1
+  row.names(x) <- NULL
+  x
 }
