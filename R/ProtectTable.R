@@ -377,6 +377,9 @@ ProtectTable  <-  function(data,
       
       attributes(finalData)$index <- NULL  # avoid attribute
       
+      if(get0("doReturnExtraFinalData",ifnotfound = FALSE))
+        extraFinalData <- list(inputData=data[,c(freqVarInd, dimVarInd),drop=FALSE],finalData=finalData)
+      
       if (stacked & doUnstack) {
         if (is.null(singleOutput)) 
           singleOutput <- FALSE
@@ -478,7 +481,8 @@ ProtectTable  <-  function(data,
           names(x3) <- paste(outSuppressed, names(x3), sep = sep)
           output <- list(info = info, data = cbind(block, x1, x2, x3))
         }
-        
+        if(get0("doReturnExtraFinalData",ifnotfound = FALSE))
+          output <- c(output,extraFinalData)
         return(output)
       }
       if (is.null(singleOutput)) 
@@ -511,7 +515,8 @@ ProtectTable  <-  function(data,
                                                                                                                                                                                                            outSdcStatus))])
           names(output) <- c("info", outFreq, outSdcStatus, outSuppressed)
         }
-      
+      if(get0("doReturnExtraFinalData",ifnotfound = FALSE))
+        output <- c(output,extraFinalData) 
       return(output)
 }
 

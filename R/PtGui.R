@@ -6,6 +6,7 @@
 #' @param language Menu language, "English" or "Norwegian".  
 #' @param exeArgus Tau-argus executable 
 #' @param pathArgus Folder for (temporary) tau-argus files
+#' @param maxNchoices Choices of maxN
 #' @param ... Further parameters sent to ProtectTable
 #'
 #' @return Output from \code{\link{ProtectTable}}. The output is returned invisibly 
@@ -37,16 +38,20 @@
 #'   }
 #'
 #'
-PTgui <- function(data=NULL, language="English", exeArgus=NULL, pathArgus=getwd(), ...){
-  invisible(print(PTguiObj(data=data,language=language,exeArgus=exeArgus,pathArgus=pathArgus, ...)))
+PTgui <- function(data=NULL, language="English", exeArgus=NULL, pathArgus=getwd(),
+                  maxNchoices=c(1:10,12,15,20), ...){
+  invisible(print(PTguiObj(data=data,language=language,exeArgus=exeArgus,pathArgus=pathArgus,
+                           maxNchoices=maxNchoices, ...)))
 }
 
 
 #' @rdname PTgui 
 #' @encoding UTF8
 #' @export
-PTguiNO <- function(data=NULL,  language="Norwegian",exeArgus=NULL, pathArgus=getwd(), ...) 
-  PTgui(data=data, language="Norwegian",exeArgus=exeArgus, pathArgus=pathArgus, ...)
+PTguiNO <- function(data=NULL,  language="Norwegian",exeArgus=NULL, pathArgus=getwd(), 
+                    maxNchoices=c(1:10,12,15,20), ...) 
+  PTgui(data=data, language="Norwegian",exeArgus=exeArgus, pathArgus=pathArgus,
+        maxNchoices=maxNchoices, ...)
 
 
 
@@ -92,8 +97,11 @@ SingleOutput = function(x){
 # Here starts the main function
 ##############################
 
-PTguiObj <- function(data=NULL, language, exeArgus, pathArgus, ...){
+PTguiObj <- function(data=NULL, language, exeArgus, pathArgus, maxNchoices, ...){
+  
   guienvir = environment()
+  
+  names(maxNchoices) <- as.character(maxNchoices) 
   
   #Switch names and values
   s <- function(x){
@@ -116,7 +124,8 @@ PTguiObj <- function(data=NULL, language, exeArgus, pathArgus, ...){
   "freq", 
   "info",
   "method",
-  "SIMPLEHEURISTIC", 
+  "SIMPLEHEURISTIC",
+  "SimpleSingle", 
   "HITAS",
   "OPT",
   "HYPERCUBE",
@@ -156,8 +165,9 @@ PTguiObj <- function(data=NULL, language, exeArgus, pathArgus, ...){
     mt["supp"] <- "Prikket" 
     mt["freq"] <- "Uprikket" 
     mt["info"] <- "Info" 
-    mt["method"] <- "Metode" 
+    mt["method"] <- "Metode"
     mt["SIMPLEHEURISTIC"] <- "SIMPLE - Rask og (for) enkel"
+    mt["SimpleSingle"] <- "SIMPLE med detectSingletons"
     mt["HITAS"] <- "HITAS - Vanlig metode" 
     mt["OPT"] <-  "OPT - Optimal, men tidkrevende"
     mt["HYPERCUBE"] = "HYPERCUBE - ikke for koblet"
@@ -194,6 +204,7 @@ PTguiObj <- function(data=NULL, language, exeArgus, pathArgus, ...){
     mt["info"] <- "Info" 
     mt["method"] <- "Method" 
     #mt["SIMPLEHEURISTIC"] <- ""
+    mt["SimpleSingle"] <- "SIMPLEHEURISTIC with detectSingletons"
     #mt["HITAS"] <- "" 
     #mt["OPT"] <-  ""
     mt["HYPERCUBE"] = "HYPERCUBE (not linked)"
@@ -257,6 +268,7 @@ shinyApp(ui = fluidPage(
       tags$hr(),
       radioButtons('method',mt["method"],
                    c(s(mt["SIMPLEHEURISTIC"]), 
+                     s(mt["SimpleSingle"]),
                      s(mt["HITAS"]), 
                      s(mt["OPT"]), 
                      s(mt["HYPERCUBE"]),
@@ -265,8 +277,8 @@ shinyApp(ui = fluidPage(
                    'SIMPLEHEURISTIC'),
       checkboxInput('protectZeros', mt["protectZeros"], TRUE),
       radioButtons('maxN',mt["maxN"],
-                   c("1"=1,"2"=2,"3"=3,"4"=4,"5"=5,
-                     "6"=6,"7"=7,"8"=8,"9"=9,"10"=10),3,inline=TRUE),
+                   maxNchoices, # c("1"=1,"2"=2,"3"=3,"4"=4,"5"=5,"6"=6,"7"=7,"8"=8,"9"=9,"10"=10)
+                   3,inline=TRUE),
       uiOutput('freqVar'),
       uiOutput('dimVar'),
       tags$hr(),

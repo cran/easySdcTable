@@ -7,10 +7,10 @@
 \title{Table suppression - Shiny Gui}
 \usage{
 PTgui(data = NULL, language = "English", exeArgus = NULL,
-  pathArgus = getwd(), ...)
+  pathArgus = getwd(), maxNchoices = c(1:10, 12, 15, 20), ...)
 
 PTguiNO(data = NULL, language = "Norwegian", exeArgus = NULL,
-  pathArgus = getwd(), ...)
+  pathArgus = getwd(), maxNchoices = c(1:10, 12, 15, 20), ...)
 }
 \arguments{
 \item{data}{NULL or a data.frame}
@@ -20,6 +20,8 @@ PTguiNO(data = NULL, language = "Norwegian", exeArgus = NULL,
 \item{exeArgus}{Tau-argus executable}
 
 \item{pathArgus}{Folder for (temporary) tau-argus files}
+
+\item{maxNchoices}{Choices of maxN}
 
 \item{...}{Further parameters sent to ProtectTable}
 }

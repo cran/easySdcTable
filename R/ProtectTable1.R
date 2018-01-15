@@ -129,7 +129,10 @@ ProtectTable1 <- function(data, dimVarInd = 1:NCOL(data), freqVarInd = NULL, pro
   problem1 <- makeProblem(data = data, dimList = dimList1, dimVarInd = match(names(dimList1), 
                                                                                colnames(data)), freqVarInd = freqVarInd)
   primary1 <- primarySupp(problem1, type = "freq", maxN = maxN, allowZeros = allowZeros)
-  
+  if(get0("doPrintDimLists",ifnotfound = FALSE)){
+    print(dimList1)
+    flush.console()
+  }  
   if (linked) {
     if(tauArgus) stop("tauArgus with linked tables is not implemented")
     dimList2 <- dimLists[ind2]
@@ -140,7 +143,11 @@ ProtectTable1 <- function(data, dimVarInd = 1:NCOL(data), freqVarInd = NULL, pro
     IncProgress()
     secondary <- protectLinkedTables(objectA = primary1, objectB = primary2, 
                                      commonCells = commonCells, method = methodLinked, ...)
-    
+    if(get0("doPrintDimLists",ifnotfound = FALSE)){
+      print(dimList2)
+      print(commonCells)
+      flush.console()
+    }
   } else {
     ind2 <- NULL
     dimList2 <- NULL
