@@ -15,13 +15,29 @@
 
 <title>The problem of singletons and zeros in ‘easySdcTable’</title>
 
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -31,14 +47,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -47,9 +65,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -306,15 +324,15 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>This document discuss background for changes made in easySdcTable after parameter <code>threshold</code> was introduced as a new possibility in sdcTable.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(easySdcTable)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(easySdcTable)</span></code></pre></div>
 </div>
 <div id="example-datasets" class="section level2">
 <h2>Example datasets</h2>
 <p>Below are four two-way example datasets. The data is organized here in wide format so that the frequencies are in several columns. It is thus one row variable and one column variable. The dataset, data1b, comes from <a href="https://github.com/krlono">Kristian Lønø</a>. He used this to point out a problem that has led to changes in the latest version of r-package sdcTable. The details are below in this document. The other datasets are modified variants.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">data1a =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">row =</span> <span class="kw">c</span>(<span class="st">&quot;r1&quot;</span>,<span class="st">&quot;r2&quot;</span>), <span class="dt">A=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>), <span class="dt">B=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="dt">H=</span><span class="kw">c</span>(<span class="dv">7</span>,<span class="dv">0</span>), <span class="dt">M=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">W=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">8</span>))</a>
-<a class="sourceLine" id="cb2-2" title="2">data1b =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">row =</span> <span class="kw">c</span>(<span class="st">&quot;r1&quot;</span>,<span class="st">&quot;r2&quot;</span>), <span class="dt">A=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">B=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="dt">H=</span><span class="kw">c</span>(<span class="dv">7</span>,<span class="dv">0</span>), <span class="dt">M=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">W=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">8</span>))</a>
-<a class="sourceLine" id="cb2-3" title="3">data0a =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">row =</span> <span class="kw">c</span>(<span class="st">&quot;r1&quot;</span>,<span class="st">&quot;r2&quot;</span>), <span class="dt">A=</span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), <span class="dt">B=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">9</span>), <span class="dt">H=</span><span class="kw">c</span>(<span class="dv">7</span>,<span class="dv">9</span>), <span class="dt">M=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">5</span>), <span class="dt">W=</span><span class="kw">c</span>(<span class="dv">9</span>,<span class="dv">8</span>))</a>
-<a class="sourceLine" id="cb2-4" title="4">data0b =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">row =</span> <span class="kw">c</span>(<span class="st">&quot;r1&quot;</span>,<span class="st">&quot;r2&quot;</span>), <span class="dt">A=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">B=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">9</span>), <span class="dt">H=</span><span class="kw">c</span>(<span class="dv">7</span>,<span class="dv">9</span>), <span class="dt">M=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>), <span class="dt">W=</span><span class="kw">c</span>(<span class="dv">9</span>,<span class="dv">8</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>data1a =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">row =</span> <span class="kw">c</span>(<span class="st">&quot;r1&quot;</span>,<span class="st">&quot;r2&quot;</span>), <span class="dt">A=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>), <span class="dt">B=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="dt">H=</span><span class="kw">c</span>(<span class="dv">7</span>,<span class="dv">0</span>), <span class="dt">M=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">W=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">8</span>))</span>
+<span id="cb2-2"><a href="#cb2-2"></a>data1b =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">row =</span> <span class="kw">c</span>(<span class="st">&quot;r1&quot;</span>,<span class="st">&quot;r2&quot;</span>), <span class="dt">A=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>), <span class="dt">B=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">0</span>), <span class="dt">H=</span><span class="kw">c</span>(<span class="dv">7</span>,<span class="dv">0</span>), <span class="dt">M=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">W=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">8</span>))</span>
+<span id="cb2-3"><a href="#cb2-3"></a>data0a =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">row =</span> <span class="kw">c</span>(<span class="st">&quot;r1&quot;</span>,<span class="st">&quot;r2&quot;</span>), <span class="dt">A=</span><span class="kw">c</span>(<span class="dv">5</span>,<span class="dv">5</span>), <span class="dt">B=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">9</span>), <span class="dt">H=</span><span class="kw">c</span>(<span class="dv">7</span>,<span class="dv">9</span>), <span class="dt">M=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">5</span>), <span class="dt">W=</span><span class="kw">c</span>(<span class="dv">9</span>,<span class="dv">8</span>))</span>
+<span id="cb2-4"><a href="#cb2-4"></a>data0b =<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">row =</span> <span class="kw">c</span>(<span class="st">&quot;r1&quot;</span>,<span class="st">&quot;r2&quot;</span>), <span class="dt">A=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="dt">B=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">9</span>), <span class="dt">H=</span><span class="kw">c</span>(<span class="dv">7</span>,<span class="dv">9</span>), <span class="dt">M=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">2</span>), <span class="dt">W=</span><span class="kw">c</span>(<span class="dv">9</span>,<span class="dv">8</span>))</span></code></pre></div>
 <table>
 <caption>
 </caption>
@@ -607,8 +625,7 @@ r2
 <div id="the-singleton-problem" class="section level2">
 <h2>The singleton problem</h2>
 <p>In the first run of the first dataset, we use <code>protectZeros = FALSE</code>. This means that 0s are not suppressed. All 0s are shown and none of them are secondary suppressed. We use the usual method, <code>&quot;SIMPLEHEURISTIC&quot;</code>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">s1a =<span class="st"> </span><span class="kw">ProtectTable</span>(data1a, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">FALSE</span>, <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, </a>
-<a class="sourceLine" id="cb3-2" title="2">    <span class="dt">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>s1a =<span class="st"> </span><span class="kw">ProtectTable</span>(data1a, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">FALSE</span>,  <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, <span class="dt">suppression=</span><span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
 </caption>
@@ -714,8 +731,8 @@ Total
 </tbody>
 </table>
 <p>Here it is easy to reveal that both the suppressed numbers in the first row must be 1 since the sum should be 9 and neither number can be 0. This is called the singleton problem. In the underlying function of sdcTable there is a parameter, <code>detectSingletons</code> (default is <code>FALSE</code>), which is intended to handle this problem. Such parameters in sdcTable can also be used as input to ProtectTable.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">s1aSingle =<span class="st"> </span><span class="kw">ProtectTable</span>(data1a, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">FALSE</span>, <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, </a>
-<a class="sourceLine" id="cb4-2" title="2">    <span class="dt">detectSingletons =</span> <span class="ot">TRUE</span>, <span class="dt">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>s1aSingle =<span class="st"> </span><span class="kw">ProtectTable</span>(data1a, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">FALSE</span>,  <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, <span class="dt">detectSingletons=</span><span class="ot">TRUE</span>,</span>
+<span id="cb4-2"><a href="#cb4-2"></a>                         <span class="dt">suppression=</span><span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
 </caption>
@@ -821,8 +838,8 @@ Total
 </tbody>
 </table>
 <p>Now it is sufficiently suppressed so that the values can no longer be revealed. In the next dataset it will be different.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">s1bSingle =<span class="st"> </span><span class="kw">ProtectTable</span>(data1b, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">FALSE</span>, <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, </a>
-<a class="sourceLine" id="cb5-2" title="2">    <span class="dt">detectSingletons =</span> <span class="ot">TRUE</span>, <span class="dt">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>s1bSingle =<span class="st"> </span><span class="kw">ProtectTable</span>(data1b, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">FALSE</span>,  <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, <span class="dt">detectSingletons=</span><span class="ot">TRUE</span>,</span>
+<span id="cb5-2"><a href="#cb5-2"></a>                         <span class="dt">suppression=</span><span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
 </caption>
@@ -932,8 +949,8 @@ Total
 <div id="solving-the-singleton-problem-by-using-threshold" class="section level2">
 <h2>Solving the singleton problem by using <code>threshold</code></h2>
 <p>The new parameter, <code>threshold</code>, is a number that can be specified. The parameter means that the sum of the suppressed cells is required to be at least threshold. This means that <code>threshold = 3</code> will solve problems in a similar way to <code>detectSingletons = TRUE</code>. In the case of data1b, then the problem is not solved since the sum is already 3. But the problem can be solved by setting <code>threshold = 4</code>.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">s1bThreshold4 =<span class="st"> </span><span class="kw">ProtectTable</span>(data1b, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">FALSE</span>, <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, </a>
-<a class="sourceLine" id="cb6-2" title="2">    <span class="dt">threshold =</span> <span class="dv">4</span>, <span class="dt">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>s1bThreshold4 =<span class="st"> </span><span class="kw">ProtectTable</span>(data1b, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">FALSE</span>,  <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, <span class="dt">threshold=</span><span class="dv">4</span>,</span>
+<span id="cb6-2"><a href="#cb6-2"></a>                         <span class="dt">suppression=</span><span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
 </caption>
@@ -1044,8 +1061,7 @@ Total
 <div id="the-problem-of-zeros" class="section level2">
 <h2>The problem of zeros</h2>
 <p>Now we consider data0a use <code>protectZeros = TRUE</code>. This means that 0s are primary suppressed.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">s0a =<span class="st"> </span><span class="kw">ProtectTable</span>(data0a, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">TRUE</span>, <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, </a>
-<a class="sourceLine" id="cb7-2" title="2">    <span class="dt">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>s0a =<span class="st"> </span><span class="kw">ProtectTable</span>(data0a, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">TRUE</span>,  <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, <span class="dt">suppression=</span><span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
 </caption>
@@ -1152,8 +1168,7 @@ Total
 </table>
 <p>Here it is easy to reveal that both the suppressed numbers in the first row must be 0 since the sum of the numbers shown is already 21. This problem is similar to the problem with 1s, but it is not called the singleton problem. It doesn’t help using <code>detectSingletons = TRUE</code>. The answer will be the same.</p>
 <p>In the next data set (data0b) there are three 0’s and the problem is the same.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">s0b =<span class="st"> </span><span class="kw">ProtectTable</span>(data0b, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">TRUE</span>, <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, </a>
-<a class="sourceLine" id="cb8-2" title="2">    <span class="dt">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>s0b =<span class="st"> </span><span class="kw">ProtectTable</span>(data0b, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">TRUE</span>,  <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, <span class="dt">suppression=</span><span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
 </caption>
@@ -1262,8 +1277,7 @@ Total
 <div id="solving-the-problem-of-zeros-by-using-threshold1" class="section level2">
 <h2>Solving the problem of zeros by using <code>threshold=1</code></h2>
 <p>The threshold parameter solves the above problem (data0a). It is sufficient to set <code>threshold = 1</code> to prevent only 0s being suppressed.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">s0aThreshold1 =<span class="st"> </span><span class="kw">ProtectTable</span>(data0a, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">TRUE</span>, <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, </a>
-<a class="sourceLine" id="cb9-2" title="2">    <span class="dt">threshold =</span> <span class="dv">1</span>, <span class="dt">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>s0aThreshold1 =<span class="st"> </span><span class="kw">ProtectTable</span>(data0a, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">TRUE</span>,  <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, <span class="dt">threshold =</span> <span class="dv">1</span>, <span class="dt">suppression=</span><span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
 </caption>
@@ -1369,8 +1383,7 @@ Total
 </tbody>
 </table>
 <p>When there are three (as below, data0b) or more zeros, the problem is also solved. It is suppressed extra to avoid disclosure.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">s0bThreshold1 =<span class="st"> </span><span class="kw">ProtectTable</span>(data0b, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">TRUE</span>, <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, </a>
-<a class="sourceLine" id="cb10-2" title="2">    <span class="dt">threshold =</span> <span class="dv">1</span>, <span class="dt">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>s0bThreshold1 =<span class="st"> </span><span class="kw">ProtectTable</span>(data0b, <span class="dv">1</span>, <span class="dv">2</span><span class="op">:</span><span class="dv">6</span>, <span class="dt">protectZeros =</span> <span class="ot">TRUE</span>,  <span class="dt">method =</span> <span class="st">&quot;SIMPLEHEURISTIC&quot;</span>, <span class="dt">threshold =</span> <span class="dv">1</span>, <span class="dt">suppression=</span><span class="st">&quot;.&quot;</span>)<span class="op">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
 </caption>
