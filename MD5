@@ -1,12 +1,12 @@
-53d2644528123c21fb690ec413b48964 *DESCRIPTION
+5acdc4b55eba240c04a54d33324d9083 *DESCRIPTION
 19cbd64715b51267a47bf3750cc6a8a5 *LICENSE
-861fe9ef047014a0365c935e4b0eca04 *NAMESPACE
-976721949212c7910b4830fcf571a652 *NEWS.md
+75de7c4836369f32c11d9cd35d5166c9 *NAMESPACE
+bdd918247003a0a79f22d4763ddd7f14 *NEWS.md
 96b170ef5062398256cf02c8e5dd0473 *R/EasyData.R
 578af89c688522239598ac6b0fa7b04c *R/IncProgress.R
 8175a07d18ddc6cdaa8e8a4226e9bc41 *R/PTwrap.R
 366587f0dc8f3f60862c9ef3995e7b45 *R/PTxyz.R
-83abd41620bc66be5b29212fcc310dd4 *R/ProtectTable.R
+372d0e24f2b181beb87056aded7ca4f6 *R/ProtectTable.R
 5ea8642aa7d163577cf2b54b654f40da *R/ProtectTable1.R
 5f177f0e49cfb8843eff69c791cf8be3 *R/PtGui.R
 4e939bed77a611469e70bc914ff5e42b *R/RbindAllwithNames.R
@@ -27,6 +27,6 @@ a88d78e6ba823940dc39ad834e506ab6 *man/PTwrap.Rd
 1da10bc2ad25ed395e6bde5827c8ba68 *man/ProtectTable1.Rd
 7fe3f8c2f8fad0531a1c377ea67b1eff *man/ReplaceDimList.Rd
 a4228aea443e4015ffc8aa0a364fd5bf *tests/testthat.R
-c576422eed6a3bcaf571ce327ab97f13 *tests/testthat/test-ProtectTable.R
+fa60904e2047a579e4acda2893e2f926 *tests/testthat/test-ProtectTable.R
 b6a77871e492484432217a3754a73d9a *vignettes/easySdcTableVignette.Rmd
 da0d305d33c5ce27e8e49cfaddf6b4c5 *vignettes/singletonsAndZeros.Rmd
