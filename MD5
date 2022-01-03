@@ -1,12 +1,12 @@
-1cb7f91a372016f28b549b1cfd34267c *DESCRIPTION
+db8b4be86b09c8747fbedb22cba37aa2 *DESCRIPTION
 715f3348ed8b9bf4fac3b08133384a4d *LICENSE
 75de7c4836369f32c11d9cd35d5166c9 *NAMESPACE
-fc920ce696bd4c22f54eba0ece8502ad *NEWS.md
+8f09b2514b05f6ab2f7938aa054a8bf1 *NEWS.md
 96b170ef5062398256cf02c8e5dd0473 *R/EasyData.R
 578af89c688522239598ac6b0fa7b04c *R/IncProgress.R
 3173554c631b904eaa156c3e4d2dd346 *R/PTwrap.R
 366587f0dc8f3f60862c9ef3995e7b45 *R/PTxyz.R
-1a86899f7675c7ecfc674cdbdb6c6ba0 *R/ProtectTable.R
+72994e9392cff0e606a8d79a6a48dbe2 *R/ProtectTable.R
 5ea8642aa7d163577cf2b54b654f40da *R/ProtectTable1.R
 39fa31859a72c132225a10956c10ff90 *R/PtGui.R
 4e939bed77a611469e70bc914ff5e42b *R/RbindAllwithNames.R
@@ -15,9 +15,9 @@ fc920ce696bd4c22f54eba0ece8502ad *NEWS.md
 e5a6db0d6cbe04a011329ea49574358b *inst/doc/easySdcTableVignette.R
 b6a77871e492484432217a3754a73d9a *inst/doc/easySdcTableVignette.Rmd
 3f885f31f3c08d3e5dae1d0b159d8d86 *inst/doc/easySdcTableVignette.html
-562ed08c22894e3177b7c6f4de2cab54 *inst/doc/singletonsAndZeros.R
-da0d305d33c5ce27e8e49cfaddf6b4c5 *inst/doc/singletonsAndZeros.Rmd
-cd31fdaa14fed0027f1d322c4fc4f5ad *inst/doc/singletonsAndZeros.html
+3d4e3636847a0cd67b651966c99ec0bf *inst/doc/singletonsAndZeros.R
+d04308b14d77652f4a6aecc9c0756186 *inst/doc/singletonsAndZeros.Rmd
+94d41e7785175fa3475e959c455b4e59 *inst/doc/singletonsAndZeros.html
 e205dfeb99aec798ccf6c0c011e31b7d *man/EasyData.Rd
 97a42a3578973e61397415bd37c5aa09 *man/IncDefault.Rd
 5d14fe908c360bc1b8084571fa7d82dc *man/PTgui.Rd
@@ -29,4 +29,4 @@ e088b18ab448245172452c6eac895d31 *man/PTwrap.Rd
 a4228aea443e4015ffc8aa0a364fd5bf *tests/testthat.R
 b43ffb8da7c3616fe03d8e728b07aeff *tests/testthat/test-ProtectTable.R
 b6a77871e492484432217a3754a73d9a *vignettes/easySdcTableVignette.Rmd
-da0d305d33c5ce27e8e49cfaddf6b4c5 *vignettes/singletonsAndZeros.Rmd
+d04308b14d77652f4a6aecc9c0756186 *vignettes/singletonsAndZeros.Rmd

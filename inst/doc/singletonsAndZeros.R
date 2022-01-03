@@ -24,52 +24,52 @@ P(data0a)
 P(data0b)
 
 ## ----comment=NA, tidy = TRUE, results = "hide", message = FALSE---------------
-s1a = ProtectTable(data1a, 1, 2:6, protectZeros = FALSE,  method = "SIMPLEHEURISTIC", suppression=".")$suppressed
+s1a = ProtectTable(data1a, 1, 2:6, protectZeros = FALSE,  method = "SIMPLEHEURISTIC_OLD", suppression=".")$suppressed
 
 ## ----comment=NA, echo=FALSE---------------------------------------------------
 P(s1a)
 
 ## ----comment=NA, tidy = TRUE, results = "hide", message = FALSE---------------
-s1aSingle = ProtectTable(data1a, 1, 2:6, protectZeros = FALSE,  method = "SIMPLEHEURISTIC", detectSingletons=TRUE,
+s1aSingle = ProtectTable(data1a, 1, 2:6, protectZeros = FALSE,  method = "SIMPLEHEURISTIC_OLD", detectSingletons=TRUE,
                          suppression=".")$suppressed
 
 ## ----comment=NA, echo=FALSE---------------------------------------------------
 P(s1aSingle)
 
 ## ----comment=NA, tidy = TRUE, results = "hide", message = FALSE---------------
-s1bSingle = ProtectTable(data1b, 1, 2:6, protectZeros = FALSE,  method = "SIMPLEHEURISTIC", detectSingletons=TRUE,
+s1bSingle = ProtectTable(data1b, 1, 2:6, protectZeros = FALSE,  method = "SIMPLEHEURISTIC_OLD", detectSingletons=TRUE,
                          suppression=".")$suppressed
 
 ## ----comment=NA, echo=FALSE---------------------------------------------------
 P(s1bSingle)
 
 ## ----comment=NA, tidy = TRUE, results = "hide", message = FALSE---------------
-s1bThreshold4 = ProtectTable(data1b, 1, 2:6, protectZeros = FALSE,  method = "SIMPLEHEURISTIC", threshold=4,
+s1bThreshold4 = ProtectTable(data1b, 1, 2:6, protectZeros = FALSE,  method = "SIMPLEHEURISTIC_OLD", threshold=4,
                          suppression=".")$suppressed
 
 ## ----comment=NA, echo=FALSE---------------------------------------------------
 P(s1bThreshold4)
 
 ## ----comment=NA, tidy = TRUE, results = "hide", message = FALSE---------------
-s0a = ProtectTable(data0a, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC", suppression=".", solve_attackerprobs = FALSE)$suppressed
+s0a = ProtectTable(data0a, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC_OLD", suppression=".", solve_attackerprobs = FALSE)$suppressed
 
 ## ----comment=NA, echo=FALSE---------------------------------------------------
 P(s0a)
 
 ## ----comment=NA, tidy = TRUE, results = "hide", message = FALSE---------------
-s0b = ProtectTable(data0b, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC", suppression=".", solve_attackerprobs = FALSE)$suppressed
+s0b = ProtectTable(data0b, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC_OLD", suppression=".", solve_attackerprobs = FALSE)$suppressed
 
 ## ----comment=NA, echo=FALSE---------------------------------------------------
 P(s0b)
 
 ## ----comment=NA, tidy = TRUE, results = "hide", message = FALSE---------------
-s0aThreshold1 = ProtectTable(data0a, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC", threshold = 1, suppression=".", solve_attackerprobs = FALSE)$suppressed
+s0aThreshold1 = ProtectTable(data0a, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC_OLD", threshold = 1, suppression=".", solve_attackerprobs = FALSE)$suppressed
 
 ## ----comment=NA, echo=FALSE---------------------------------------------------
 P(s0aThreshold1)
 
 ## ----comment=NA, tidy = TRUE, results = "hide", message = FALSE---------------
-s0bThreshold1 = ProtectTable(data0b, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC", threshold = 1, suppression=".", solve_attackerprobs = FALSE)$suppressed
+s0bThreshold1 = ProtectTable(data0b, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC_OLD", threshold = 1, suppression=".", solve_attackerprobs = FALSE)$suppressed
 
 ## ----comment=NA, echo=FALSE---------------------------------------------------
 P(s0bThreshold1)
