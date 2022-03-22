@@ -27,6 +27,7 @@
     </style>
 
 
+
 <style type="text/css">
   code {
     white-space: pre;
@@ -157,9 +158,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>data0b <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">row =</span> <span class="fu">c</span>(<span class="st">&quot;r1&quot;</span>,<span class="st">&quot;r2&quot;</span>), <span class="at">A=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>), <span class="at">B=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">9</span>), <span class="at">H=</span><span class="fu">c</span>(<span class="dv">7</span>,<span class="dv">9</span>), <span class="at">M=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2</span>), <span class="at">W=</span><span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">8</span>))</span></code></pre></div>
 <table>
 <caption>
-</caption>
-<table>
-<caption>
 data1a
 </caption>
 <thead>
@@ -227,9 +225,6 @@ r2
 </tr>
 </tbody>
 </table>
-<table>
-<caption>
-</caption>
 <table>
 <caption>
 data1b
@@ -301,9 +296,6 @@ r2
 </table>
 <table>
 <caption>
-</caption>
-<table>
-<caption>
 data0a
 </caption>
 <thead>
@@ -371,9 +363,6 @@ r2
 </tr>
 </tbody>
 </table>
-<table>
-<caption>
-</caption>
 <table>
 <caption>
 data0b
@@ -449,9 +438,6 @@ r2
 <p>In the first run of the first dataset, we use <code>protectZeros = FALSE</code>. This means that 0s are not suppressed. All 0s are shown and none of them are secondary suppressed. We use the (previously) usual method, <code>&quot;SIMPLEHEURISTIC_OLD&quot;</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>s1a <span class="ot">=</span> <span class="fu">ProtectTable</span>(data1a, <span class="dv">1</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">protectZeros =</span> <span class="cn">FALSE</span>, <span class="at">method =</span> <span class="st">&quot;SIMPLEHEURISTIC_OLD&quot;</span>,</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
-<table>
-<caption>
-</caption>
 <table>
 <caption>
 s1a
@@ -558,9 +544,6 @@ Total
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">detectSingletons =</span> <span class="cn">TRUE</span>, <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
-</caption>
-<table>
-<caption>
 s1aSingle
 </caption>
 <thead>
@@ -663,9 +646,6 @@ Total
 <p>Now it is sufficiently suppressed so that the values can no longer be revealed. In the next dataset it will be different.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>s1bSingle <span class="ot">=</span> <span class="fu">ProtectTable</span>(data1b, <span class="dv">1</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">protectZeros =</span> <span class="cn">FALSE</span>, <span class="at">method =</span> <span class="st">&quot;SIMPLEHEURISTIC_OLD&quot;</span>,</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">detectSingletons =</span> <span class="cn">TRUE</span>, <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
-<table>
-<caption>
-</caption>
 <table>
 <caption>
 s1bSingle
@@ -776,9 +756,6 @@ Total
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">threshold =</span> <span class="dv">4</span>, <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
-</caption>
-<table>
-<caption>
 s1bThreshold4
 </caption>
 <thead>
@@ -885,10 +862,7 @@ Total
 <h2>The problem of zeros</h2>
 <p>Now we consider data0a use <code>protectZeros = TRUE</code>. This means that 0s are primary suppressed.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>s0a <span class="ot">=</span> <span class="fu">ProtectTable</span>(data0a, <span class="dv">1</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">protectZeros =</span> <span class="cn">TRUE</span>, <span class="at">method =</span> <span class="st">&quot;SIMPLEHEURISTIC_OLD&quot;</span>,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>, <span class="at">solve_attackerprobs =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
-<table>
-<caption>
-</caption>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
 s0a
@@ -993,10 +967,7 @@ Total
 <p>Here it is easy to reveal that both the suppressed numbers in the first row must be 0 since the sum of the numbers shown is already 21. This problem is similar to the problem with 1s, but it is not called the singleton problem. It doesn’t help using <code>detectSingletons = TRUE</code>. The answer will be the same.</p>
 <p>In the next data set (data0b) there are three 0’s and the problem is the same.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>s0b <span class="ot">=</span> <span class="fu">ProtectTable</span>(data0b, <span class="dv">1</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">protectZeros =</span> <span class="cn">TRUE</span>, <span class="at">method =</span> <span class="st">&quot;SIMPLEHEURISTIC_OLD&quot;</span>,</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>, <span class="at">solve_attackerprobs =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
-<table>
-<caption>
-</caption>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
 s0b
@@ -1103,10 +1074,7 @@ Total
 <h2>Solving the problem of zeros by using <code>threshold=1</code></h2>
 <p>The threshold parameter solves the above problem (data0a). It is sufficient to set <code>threshold = 1</code> to prevent only 0s being suppressed.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>s0aThreshold1 <span class="ot">=</span> <span class="fu">ProtectTable</span>(data0a, <span class="dv">1</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">protectZeros =</span> <span class="cn">TRUE</span>, <span class="at">method =</span> <span class="st">&quot;SIMPLEHEURISTIC_OLD&quot;</span>,</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">threshold =</span> <span class="dv">1</span>, <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>, <span class="at">solve_attackerprobs =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
-<table>
-<caption>
-</caption>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">threshold =</span> <span class="dv">1</span>, <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
 s0aThreshold1
@@ -1210,10 +1178,7 @@ Total
 </table>
 <p>When there are three (as below, data0b) or more zeros, the problem is also solved. It is suppressed extra to avoid disclosure.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>s0bThreshold1 <span class="ot">=</span> <span class="fu">ProtectTable</span>(data0b, <span class="dv">1</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">protectZeros =</span> <span class="cn">TRUE</span>, <span class="at">method =</span> <span class="st">&quot;SIMPLEHEURISTIC_OLD&quot;</span>,</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">threshold =</span> <span class="dv">1</span>, <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>, <span class="at">solve_attackerprobs =</span> <span class="cn">FALSE</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
-<table>
-<caption>
-</caption>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">threshold =</span> <span class="dv">1</span>, <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
 s0bThreshold1
@@ -1331,12 +1296,9 @@ Total
 <div id="note-after-easysdctable-version-0.8.0" class="section level2">
 <h2>Note after easySdcTable version 0.8.0</h2>
 <p>Method <code>&quot;Gauss&quot;</code> made default (See NEWS).</p>
-<p>For all the examples to still be relevant, <code>&quot;SIMPLEHEURISTIC_OLD&quot;</code> is used instead of <code>&quot;SIMPLEHEURISTIC&quot;</code>. In the zero problem examples, <code>solve_attackerprobs=FALSE</code> is included. In the solution after <code>threshold=1</code>, more cells than earlier (more than needed) are suppressed.</p>
+<p>For all the examples to still be relevant, <code>&quot;SIMPLEHEURISTIC_OLD&quot;</code> is used instead of <code>&quot;SIMPLEHEURISTIC&quot;</code>. In the solution after <code>threshold=1</code>, more cells than earlier (more than needed) are suppressed.</p>
 <p>Methodology to handle the problem of singletons and zeros are also included in “Gauss” . Below is output:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>s1aGauss <span class="ot">=</span> <span class="fu">ProtectTable</span>(data1a, <span class="dv">1</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">protectZeros =</span> <span class="cn">FALSE</span>, <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
-<table>
-<caption>
-</caption>
 <table>
 <caption>
 s1aGauss
@@ -1441,9 +1403,6 @@ Total
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>s1bGauss <span class="ot">=</span> <span class="fu">ProtectTable</span>(data1b, <span class="dv">1</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">protectZeros =</span> <span class="cn">FALSE</span>, <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
-</caption>
-<table>
-<caption>
 s1bGauss
 </caption>
 <thead>
@@ -1546,9 +1505,6 @@ Total
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>s0aGauss <span class="ot">=</span> <span class="fu">ProtectTable</span>(data0a, <span class="dv">1</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">protectZeros =</span> <span class="cn">TRUE</span>, <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
 <table>
 <caption>
-</caption>
-<table>
-<caption>
 s0aGauss
 </caption>
 <thead>
@@ -1649,9 +1605,6 @@ Total
 </tbody>
 </table>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>s0bGauss <span class="ot">=</span> <span class="fu">ProtectTable</span>(data0b, <span class="dv">1</span>, <span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">protectZeros =</span> <span class="cn">TRUE</span>, <span class="at">suppression =</span> <span class="st">&quot;.&quot;</span>)<span class="sc">$</span>suppressed</span></code></pre></div>
-<table>
-<caption>
-</caption>
 <table>
 <caption>
 s0bGauss

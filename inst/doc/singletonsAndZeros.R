@@ -5,7 +5,7 @@ P <- function(df, caption = NULL){
   if(is.null(caption)){
     caption = deparse(substitute(df))
   }
-  kable(df, "html", row.names = FALSE, caption = c("\n", caption), align = "r")
+  kable(df, "html", row.names = FALSE, caption = caption, align = "r")
 }
 
 ## ----comment=NA, tidy = TRUE, results = "hide", message = FALSE---------------
@@ -51,25 +51,25 @@ s1bThreshold4 = ProtectTable(data1b, 1, 2:6, protectZeros = FALSE,  method = "SI
 P(s1bThreshold4)
 
 ## ----comment=NA, tidy = TRUE, results = "hide", message = FALSE---------------
-s0a = ProtectTable(data0a, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC_OLD", suppression=".", solve_attackerprobs = FALSE)$suppressed
+s0a = ProtectTable(data0a, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC_OLD", suppression=".")$suppressed
 
 ## ----comment=NA, echo=FALSE---------------------------------------------------
 P(s0a)
 
 ## ----comment=NA, tidy = TRUE, results = "hide", message = FALSE---------------
-s0b = ProtectTable(data0b, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC_OLD", suppression=".", solve_attackerprobs = FALSE)$suppressed
+s0b = ProtectTable(data0b, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC_OLD", suppression=".")$suppressed
 
 ## ----comment=NA, echo=FALSE---------------------------------------------------
 P(s0b)
 
 ## ----comment=NA, tidy = TRUE, results = "hide", message = FALSE---------------
-s0aThreshold1 = ProtectTable(data0a, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC_OLD", threshold = 1, suppression=".", solve_attackerprobs = FALSE)$suppressed
+s0aThreshold1 = ProtectTable(data0a, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC_OLD", threshold = 1, suppression=".")$suppressed
 
 ## ----comment=NA, echo=FALSE---------------------------------------------------
 P(s0aThreshold1)
 
 ## ----comment=NA, tidy = TRUE, results = "hide", message = FALSE---------------
-s0bThreshold1 = ProtectTable(data0b, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC_OLD", threshold = 1, suppression=".", solve_attackerprobs = FALSE)$suppressed
+s0bThreshold1 = ProtectTable(data0b, 1, 2:6, protectZeros = TRUE,  method = "SIMPLEHEURISTIC_OLD", threshold = 1, suppression=".")$suppressed
 
 ## ----comment=NA, echo=FALSE---------------------------------------------------
 P(s0bThreshold1)

@@ -27,6 +27,7 @@
     </style>
 
 
+
 <style type="text/css">
   code {
     white-space: pre;
@@ -152,6 +153,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="note-after-easysdctable-version-0.8.0" class="section level4">
 <h4>Note after easySdcTable version 0.8.0</h4>
 <p>Method <code>&quot;Gauss&quot;</code> has been made default (See NEWS). This is an additional method that is not available in sdcTable.</p>
+</div>
+<div id="news-in-easysdctable-version-0.9.0" class="section level4">
+<h4>News in easySdcTable version 0.9.0</h4>
+<p>Method “Gauss” improved when zeros omitted in input data.</p>
+<ul>
+<li>A potential pitfall when doing secondary suppression by Gaussian elimination is cases with <code>protectZeros = TRUE</code> and where zeros are omitted in input data. The underlying function, GaussSuppression, produce a warning in such cases (introduced in SSBtools version 1.2.2) with text: <em>“Suppressed cells with empty input will not be protected. Extend input data with zeros?”</em>. Cases where this warning occur is now avoided within ProtectTable. Internally data are automatically extended when needed.</li>
+</ul>
+</div>
+<div id="another-comment-about-gauss-and-zeros-omitted-in-input" class="section level4">
+<h4>Another comment about “Gauss” and zeros omitted in input</h4>
+<p>When hierarchies are supplied as input (parameter <code>dimList</code>) and when there exist input codes in the hierarchies that are totally missing in the data, it is still possible to create a situation with warning: <em>“Suppressed cells with empty input will not be protected. Extend input data with zeros?”</em>. This behavior will not be changed. Ignore the warning if such codes represent structural zeros. If not, extend data with zero frequencies (see parameter freqVar) so that these code are represented in data.</p>
 </div>
 </div>
 <div id="graphical-user-interface-and-tau-argus" class="section level2">
