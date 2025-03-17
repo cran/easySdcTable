@@ -3,15 +3,15 @@ library(knitr)
 library(easySdcTable)
 
 ## ----eval=FALSE, tidy = TRUE--------------------------------------------------
-#  PTgui()
+# PTgui()
 
 ## ----eval=FALSE, tidy = TRUE--------------------------------------------------
-#  out <- PTgui(data=EasyData("z1w"))
+# out <- PTgui(data=EasyData("z1w"))
 
 ## ----eval=FALSE, tidy = TRUE--------------------------------------------------
-#  exeArgus <- "C:/Tau/TauArgus4.1.4/TauArgus.exe" # Tau-argus executable
-#  pathArgus <- "C:/Users/nnn/Documents" # Folder for (temporary) tau-argus files
-#  PTgui(exeArgus=exeArgus, pathArgus=pathArgus)
+# exeArgus <- "C:/Tau/TauArgus4.1.4/TauArgus.exe" # Tau-argus executable
+# pathArgus <- "C:/Users/nnn/Documents" # Folder for (temporary) tau-argus files
+# PTgui(exeArgus=exeArgus, pathArgus=pathArgus)
 
 ## ----comment=NA, tidy = TRUE--------------------------------------------------
 z2w <- EasyData("z2w") 
